@@ -53,22 +53,22 @@ RUN true \
   && php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
   && rm -f composer-setup.php \
 	\
-  && docker-php-ext-configure zip --enable-zip \
-  && docker-php-ext-configure gmp --with-gmp \
   && docker-php-ext-configure bcmath --enable-bcmath \
   && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ --with-webp-dir=/usr/include --with-png-dir=/usr/include --with-xpm-dir=/usr/include \
+  && docker-php-ext-configure gmp --with-gmp \
 	&& docker-php-ext-configure imap --with-kerberos --with-imap-ssl \
+  && docker-php-ext-configure zip --enable-zip \
   && docker-php-ext-install -j$(nproc) zip gmp bcmath pdo_mysql gd gettext imap intl mysqli opcache pspell recode tidy xsl \
   \
   && docker-php-source extract \
   	&& cd /usr/src/php/ext \
   	\
-    && curl -fsSL 'http://pecl.php.net/get/memcached' -o memcached.tar.gz \
-    && mkdir -p memcached \
-    && tar -xf memcached.tar.gz -C memcached --strip-components=1 \
-		&& docker-php-ext-configure memcached \
-		&& docker-php-ext-install -j$(nproc) memcached \
-    && rm -r memcached.tar.gz memcached \
+    && curl -fsSL 'http://pecl.php.net/get/imagick' -o imagick.tar.gz \
+    && mkdir -p imagick \
+    && tar -xf imagick.tar.gz -C imagick --strip-components=1 \
+		&& docker-php-ext-configure imagick --enable-imagick \
+		&& docker-php-ext-install -j$(nproc) imagick \
+    && rm -r imagick.tar.gz imagick \
   	\
     && curl -fsSL 'http://pecl.php.net/get/mcrypt' -o mcrypt.tar.gz \
     && mkdir -p mcrypt \
@@ -77,12 +77,12 @@ RUN true \
 		&& docker-php-ext-install -j$(nproc) mcrypt \
     && rm -r mcrypt.tar.gz mcrypt \
   	\
-    && curl -fsSL 'http://pecl.php.net/get/imagick' -o imagick.tar.gz \
-    && mkdir -p imagick \
-    && tar -xf imagick.tar.gz -C imagick --strip-components=1 \
-		&& docker-php-ext-configure imagick --enable-imagick \
-		&& docker-php-ext-install -j$(nproc) imagick \
-    && rm -r imagick.tar.gz imagick \
+    && curl -fsSL 'http://pecl.php.net/get/memcached' -o memcached.tar.gz \
+    && mkdir -p memcached \
+    && tar -xf memcached.tar.gz -C memcached --strip-components=1 \
+		&& docker-php-ext-configure memcached \
+		&& docker-php-ext-install -j$(nproc) memcached \
+    && rm -r memcached.tar.gz memcached \
 		\
 #		&& git clone https://github.com/websupport-sk/pecl-memcache memcache \
 #		&& docker-php-ext-configure memcache --enable-memcache \
