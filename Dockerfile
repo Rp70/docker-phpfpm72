@@ -4,11 +4,11 @@ FROM php:7.2-fpm-stretch
 ENV DEBIAN_FRONTEND noninteractive
 
 
-RUN true \
+RUN set -ex \
 	&& apt-get autoremove \
 	&& apt-get update -y \
 	&& apt-get install -y \
-		cron \
+		cron nginx supervisor \
 		\
 		# for sending mail via PHP.
 		ssmtp bsd-mailx \
@@ -21,28 +21,14 @@ RUN true \
 		\
 		git \
 		\
-		libfreetype6-dev libjpeg62-turbo-dev libpng-dev libwebp-dev libxpm-dev \
-		\
-		libmcrypt-dev \
-		\
-		imagemagick libmagickwand-dev \
+		libfreetype6-dev libjpeg62-turbo-dev libpng-dev libwebp-dev libxpm-dev libmcrypt-dev imagemagick libmagickwand-dev \
 		\
 		# Fix: configure: error: utf8_mime2text() has new signature, but U8T_CANONICAL is missing. This should not happen. Check config.log for additional information.
 		# Reference: http://www.howtodoityourself.org/fix-error-utf8_mime2text.html
 		# Reference: https://packages.ubuntu.com/xenial/libdevel/libc-client2007e-dev
 		libkrb5-dev libc-client2007e-dev krb5-multidev libpam0g-dev libssl-dev \
 		\
-		libpspell-dev \
-		\
-		librecode-dev \
-		\
-		libtidy-dev \
-		\
-		libxslt1-dev \
-		\
-		libgmp-dev \
-		\
-		libmemcached-dev zip unzip zlib1g-dev \
+		libpspell-dev librecode-dev libtidy-dev libxslt1-dev libgmp-dev libmemcached-dev zip unzip zlib1g-dev \
 	\
 	# sendmail setup with SSMTP for mail().
 	&& echo "FromLineOverride=YES" >> /etc/ssmtp/ssmtp.conf \
