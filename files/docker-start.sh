@@ -8,6 +8,10 @@ if [ "$1" = 'startup' ]; then
 	NGINX_ENABLE={NGINX_ENABLE:=''}
 	SUPERVISOR_ENABLE=0
 
+echo $CRON_ENABLE
+echo $CRON_COMMANDS
+echo $NGINX_ENABLE
+echo $SUPERVISOR_ENABLE
 
 	if [ "$CRON_COMMANDS" != '' ]; then
 		CRON_ENABLE="1"
