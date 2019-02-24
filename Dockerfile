@@ -4,12 +4,15 @@ FROM php:7.2-fpm-stretch
 ENV DEBIAN_FRONTEND noninteractive
 
 
-RUN set -ex \
-	&& apt-get autoremove \
+# Copy files in /root into the image.
+COPY /files/ /
+
+RUN set -ex && \
+	chmod +x /docker*.sh \
 	&& apt-get update -y \
 	&& apt-get install -y \
 		cron nginx supervisor \
-	&& true
+	&& apt-get autoremove
 
 # RUN set -ex \
 # 	&& apt-get autoremove \
@@ -85,9 +88,7 @@ RUN set -ex \
 #   && docker-php-source delete \
 #   && true
 
-# copy custom scripts.
-COPY /docker-start.sh /
-RUN chmod +x /docker*.sh
+
 
 ENTRYPOINT ["/docker-start.sh"]
 CMD ["startup"]
