@@ -15,13 +15,13 @@ if [ "$1" = 'startup' ]; then
 	if [ "$CRON_ENABLE" = '' ]; then
 		rm -f /etc/supervisor/conf.d/cron.conf
 	else
-		SUPERVISOR_ENABLE++
+		SUPERVISOR_ENABLE=$((SUPERVISOR_ENABLE+1))
 	fi
 
 	if [ "$NGINX_ENABLE" = '' ]; then
 		rm -f /etc/supervisor/conf.d/nginx.conf
 	else
-		SUPERVISOR_ENABLE++
+		SUPERVISOR_ENABLE=$((SUPERVISOR_ENABLE+1))
 	fi
 
 	mkdir -p /var/log/php-fpm
