@@ -34,9 +34,9 @@ if [ "$1" = 'startup' ]; then
 	fi
 
 	if [ "$SUPERVISOR_ENABLE" -gt 0 ]; then
-		exec supervisord;
+		exec supervisord --nodaemon;
 	else
-		exec php-fpm;
+		exec php-fpm --nodaemonize;
 	fi
 	
 else
