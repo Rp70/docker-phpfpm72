@@ -11,7 +11,7 @@ RUN set -ex && \
 	chmod +x /docker*.sh \
 	&& apt-get update -y \
 	&& apt-get install -y \
-		cron nginx supervisor \
+		cron nginx memcached supervisor \
 	&& apt-get autoremove
 
 # RUN set -ex \
