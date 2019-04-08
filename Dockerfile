@@ -12,13 +12,14 @@ RUN set -ex && \
 	&& apt-get update -y \
 	&& apt-get install -y \
 		cron nginx memcached supervisor \
+		ssmtp bsd-mailx \
 	&& apt-get autoremove
 
 # RUN set -ex \
 # 	&& apt-get autoremove \
 # 	&& apt-get update -y \
 # 	&& apt-get install -y \
-# 		cron nginx supervisor \
+# 		cron nginx memcached supervisor \
 # 		\
 # 		# for sending mail via PHP.
 # 		ssmtp bsd-mailx \
