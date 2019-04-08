@@ -28,6 +28,13 @@ if [ "$1" = 'startup' ]; then
 		rm -f /etc/supervisor/conf.d/nginx.conf
 	else
 		SUPERVISOR_ENABLE=$((SUPERVISOR_ENABLE+1))
+
+		rm -rf /etc/nginx/sites-available/default
+		#sed -i 's/^user/daemon off;\nuser/g' /etc/nginx/nginx.conf
+		#sed -i 's/^user www-data;/user coin;/g' /etc/nginx/nginx.conf
+		sed -i 's/^worker_processes auto;/worker_processes 2;/g' /etc/nginx/nginx.conf
+		sed -i 's/\baccess_log[^;]*;/access_log \/dev\/stdout;/g' /etc/nginx/nginx.conf
+		sed -i 's/\berror_log[^;]*;/error_log \/dev\/stdout;/g' /etc/nginx/nginx.conf
 	fi
 
 	mkdir -p /var/log/php-fpm
