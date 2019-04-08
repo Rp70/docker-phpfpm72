@@ -13,6 +13,7 @@ RUN set -ex && \
 	&& apt-get install -y \
 		cron nginx memcached supervisor \
 		ssmtp bsd-mailx \
+		procps \
 	&& apt-get autoremove
 
 # RUN set -ex \
