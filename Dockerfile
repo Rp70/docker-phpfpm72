@@ -10,7 +10,7 @@ COPY /files/ /
 RUN set -ex && \
 	chmod +x /docker*.sh \
 	&& apt-get update -y \
-	&& apt-get install -y \
+	&& apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
 		cron nginx memcached supervisor \
 		ssmtp bsd-mailx \
 		procps \
