@@ -10,6 +10,7 @@ if [ "$1" = 'startup' ]; then
 	NGINX_PROCESSES=${NGINX_PROCESSES:='2'}
 	NGINX_REALIP_FROM=${NGINX_REALIP_FROM:=''}
 	NGINX_REALIP_HEADER=${NGINX_REALIP_HEADER:=''}
+	#NGINX_DISABLE_MODULES=${NGINX_REALIP_HEADER:=''}
 	SUPERVISOR_ENABLE=0
 
 	if [ "$CRON_COMMANDS" != '' ]; then
@@ -38,6 +39,33 @@ if [ "$1" = 'startup' ]; then
 		sed -i "s/^worker_processes auto;/worker_processes $NGINX_PROCESSES;/g" /etc/nginx/nginx.conf
 		#sed -i 's/\baccess_log[^;]*;/access_log \/dev\/stdout;/g' /etc/nginx/nginx.conf
 		#sed -i 's/\berror_log[^;]*;/error_log \/dev\/stdout;/g' /etc/nginx/nginx.conf
+
+		rm -rf /etc/nginx/modules-enabled/*.conf
+		
+		### realip_module ###
+		# Cloudflare IPv4: https://www.cloudflare.com/ips-v4
+		# Cloudflare IPv6: https://www.cloudflare.com/ips-v6
+		CONFFILE=/etc/nginx/conf.d/realip.conf
+		IPADDRS=""
+		for ipaddr in $NGINX_REALIP_FROM; do
+			if [ "$ipaddr" = "cloudflare" ]; then
+				IPADDRS="$IPADDRS `curl https://www.cloudflare.com/ips-v4 2> /dev/null`"
+				IPADDRS="$IPADDRS `curl https://www.cloudflare.com/ips-v6 2> /dev/null`"
+				NGINX_REALIP_HEADER='CF-Connecting-IP'
+			else
+				IPADDRS="$IPADDRS\n$ipaddr"
+			fi
+			
+		done
+
+		echo "### This file is auto-generated. ###" > $CONFFILE
+		echo "### Your changes will be overwriten. ###" >> $CONFFILE
+		echo >> $CONFFILE
+		for ipaddr in $IPADDRS; do
+			echo "set_real_ip_from $ipaddr;" >> $CONFFILE
+		done
+		echo "real_ip_header $NGINX_REALIP_HEADER;" >> $CONFFILE
+		### / realip_module ###
 	fi
 
 	mkdir -p /var/log/php-fpm
