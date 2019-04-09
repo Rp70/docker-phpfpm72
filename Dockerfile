@@ -19,7 +19,7 @@ RUN set -ex && \
 # RUN set -ex \
 # 	&& apt-get autoremove \
 # 	&& apt-get update -y \
-# 	&& apt-get install -y \
+# 	&& apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
 # 		cron nginx memcached supervisor \
 # 		\
 # 		# for sending mail via PHP.
