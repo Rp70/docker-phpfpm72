@@ -49,22 +49,31 @@ if [ "$1" = 'startup' ]; then
 		IPADDRS=""
 		for ipaddr in $NGINX_REALIP_FROM; do
 			if [ "$ipaddr" = "cloudflare" ]; then
-				IPADDRS="$IPADDRS `curl https://www.cloudflare.com/ips-v4 2> /dev/null`"
-				IPADDRS="$IPADDRS `curl https://www.cloudflare.com/ips-v6 2> /dev/null`"
+				IPADDRS="$IPADDRS `curl -f --connect-timeout 30 https://www.cloudflare.com/ips-v4 2> /dev/null`"
+				if [ $? -gt 0 ]; then
+					IPADDRS="$IPADDRS `cat /tmp/cloudflare-ips-v4 2> /dev/null`"
+				fi
+
+				IPADDRS="$IPADDRS `curl -f --connect-timeout 30 https://www.cloudflare.com/ips-v6 2> /dev/null`"
+				if [ $? -gt 0 ]; then
+					IPADDRS="$IPADDRS `cat /tmp/cloudflare-ips-v6 2> /dev/null`"
+				fi
+
 				NGINX_REALIP_HEADER='CF-Connecting-IP'
 			else
 				IPADDRS="$IPADDRS $ipaddr"
 			fi
-			
 		done
 
-		echo "### This file is auto-generated. ###" > $CONFFILE
-		echo "### Your changes will be overwriten. ###" >> $CONFFILE
-		echo >> $CONFFILE
-		for ipaddr in $IPADDRS; do
-			echo "set_real_ip_from $ipaddr;" >> $CONFFILE
-		done
-		echo "real_ip_header $NGINX_REALIP_HEADER;" >> $CONFFILE
+		if [ "$IPADDRS" != '' ]; then
+			echo "### This file is auto-generated. ###" > $CONFFILE
+			echo "### Your changes will be overwriten. ###" >> $CONFFILE
+			echo >> $CONFFILE
+			for ipaddr in $IPADDRS; do
+				echo "set_real_ip_from $ipaddr;" >> $CONFFILE
+			done
+			echo "real_ip_header $NGINX_REALIP_HEADER;" >> $CONFFILE
+		fi
 		### / realip_module ###
 	fi
 
