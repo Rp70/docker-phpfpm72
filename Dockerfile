@@ -11,7 +11,7 @@ RUN set -ex && \
 	chmod +x /docker*.sh && \
 	curl -f --output /tmp/cloudflare-ips-v4 --connect-timeout 30 https://www.cloudflare.com/ips-v4 2> /dev/null && \
 	curl -f --output /tmp/cloudflare-ips-v6 --connect-timeout 30 https://www.cloudflare.com/ips-v6 2> /dev/null && \
-	&& apt-get update -y \
+	apt-get update -y \
 	&& apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
 		cron nginx memcached supervisor \
 		ssmtp bsd-mailx \
