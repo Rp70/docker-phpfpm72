@@ -53,7 +53,7 @@ if [ "$1" = 'startup' ]; then
 				IPADDRS="$IPADDRS `curl https://www.cloudflare.com/ips-v6 2> /dev/null`"
 				NGINX_REALIP_HEADER='CF-Connecting-IP'
 			else
-				IPADDRS="$IPADDRS\n$ipaddr"
+				IPADDRS="$IPADDRS $ipaddr"
 			fi
 			
 		done
