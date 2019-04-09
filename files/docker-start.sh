@@ -8,6 +8,8 @@ if [ "$1" = 'startup' ]; then
 	MEMCACHED_ENABLE=${MEMCACHED_ENABLE:=''}
 	NGINX_ENABLE=${NGINX_ENABLE:=''}
 	NGINX_PROCESSES=${NGINX_PROCESSES:='2'}
+	NGINX_REALIP_FROM=${NGINX_REALIP_FROM:=''}
+	NGINX_REALIP_HEADER=${NGINX_REALIP_HEADER:=''}
 	SUPERVISOR_ENABLE=0
 
 	if [ "$CRON_COMMANDS" != '' ]; then
@@ -30,12 +32,12 @@ if [ "$1" = 'startup' ]; then
 	else
 		SUPERVISOR_ENABLE=$((SUPERVISOR_ENABLE+1))
 
-		rm -rf /etc/nginx/sites-available/default
+		#rm -rf /etc/nginx/sites-available/default
 		#sed -i 's/^user/daemon off;\nuser/g' /etc/nginx/nginx.conf
 		#sed -i 's/^user www-data;/user coin;/g' /etc/nginx/nginx.conf
 		sed -i "s/^worker_processes auto;/worker_processes $NGINX_PROCESSES;/g" /etc/nginx/nginx.conf
-		sed -i 's/\baccess_log[^;]*;/access_log \/dev\/stdout;/g' /etc/nginx/nginx.conf
-		sed -i 's/\berror_log[^;]*;/error_log \/dev\/stdout;/g' /etc/nginx/nginx.conf
+		#sed -i 's/\baccess_log[^;]*;/access_log \/dev\/stdout;/g' /etc/nginx/nginx.conf
+		#sed -i 's/\berror_log[^;]*;/error_log \/dev\/stdout;/g' /etc/nginx/nginx.conf
 	fi
 
 	mkdir -p /var/log/php-fpm
