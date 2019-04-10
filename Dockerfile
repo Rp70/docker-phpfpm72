@@ -8,7 +8,7 @@ ENV DEBIAN_FRONTEND noninteractive
 COPY /files/ /
 
 # RUN set -ex && \
-# 	chmod +x /docker*.sh && \
+# 	chmod +x /entrypoint*.sh && \
 # 	curl -f --output /tmp/cloudflare-ips-v4 --connect-timeout 30 https://www.cloudflare.com/ips-v4 2> /dev/null && \
 # 	curl -f --output /tmp/cloudflare-ips-v6 --connect-timeout 30 https://www.cloudflare.com/ips-v6 2> /dev/null && \
 # 	ls -lah /tmp/cloudflare* && \
@@ -20,7 +20,7 @@ COPY /files/ /
 # 	&& apt-get autoremove
 
 RUN set -ex && \
-	chmod +x /docker*.sh && \
+	chmod +x /entrypoint*.sh && \
 	curl -f --output /tmp/cloudflare-ips-v4 --connect-timeout 30 https://www.cloudflare.com/ips-v4 2> /dev/null && \
 	curl -f --output /tmp/cloudflare-ips-v6 --connect-timeout 30 https://www.cloudflare.com/ips-v6 2> /dev/null && \
 	ls -lah /tmp/cloudflare* && \
