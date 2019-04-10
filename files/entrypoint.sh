@@ -1,6 +1,9 @@
 #!/bin/sh
 set -e
 
+if [ -e /entrypoint-hook-start.sh ]; then
+	. /entrypoint-hook-start.sh
+fi
 
 CRON_ENABLE=${CRON_ENABLE:=''}
 CRON_COMMANDS=${CRON_COMMANDS:=''}
@@ -8,8 +11,8 @@ MEMCACHED_ENABLE=${MEMCACHED_ENABLE:=''}
 NGINX_ENABLE=${NGINX_ENABLE:=''}
 NGINX_PROCESSES=${NGINX_PROCESSES:='2'}
 NGINX_REALIP_FROM=${NGINX_REALIP_FROM:=''}
-NGINX_REALIP_HEADER=${NGINX_REALIP_HEADER:=''}
-#NGINX_DISABLE_MODULES=${NGINX_REALIP_HEADER:=''}
+NGINX_REALIP_HEADER=${NGINX_REALIP_HEADER:='X-Forwarded-For'}
+
 SUPERVISOR_ENABLE=0
 
 if [ "$CRON_COMMANDS" != '' ]; then
@@ -81,8 +84,8 @@ touch /var/log/php-fpm/error.log
 chown -R www-data:www-data /var/log/php-fpm
 chmod 0777 /var/log/php-fpm
 
-if [ -e /docker-start-hook.sh ]; then
-	. /docker-start-hook.sh
+if [ -e /entrypoint-hook-end.sh ]; then
+	. /entrypoint-hook-end.sh
 fi
 
 if [ "$1" = 'startup' ]; then

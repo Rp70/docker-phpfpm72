@@ -98,5 +98,5 @@ RUN set -ex && \
 
 
 
-ENTRYPOINT ["/docker-start.sh"]
+ENTRYPOINT ["/entrypoint.sh"]
 CMD ["startup"]
