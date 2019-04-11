@@ -56,7 +56,7 @@ RUN set -ex && \
   \
   && cd /tmp \
   && curl -o composer-setup.php https://getcomposer.org/installer \
-  && php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
+  && php -d open_basedir="" composer-setup.php --install-dir=/usr/local/bin --filename=composer \
   && rm -f composer-setup.php \
 	\
   && docker-php-ext-configure bcmath --enable-bcmath \
