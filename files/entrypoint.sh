@@ -19,7 +19,7 @@ if [ "$CRON_COMMANDS" != '' ]; then
 	CRON_ENABLE="1"
 fi
 if [ "$CRON_ENABLE" = '' ]; then
-	rm -f /etc/supervisor/conf.d/cron.conf
+	rm -f /etc/supervisor/conf.d/crond.conf
 else
 	SUPERVISOR_ENABLE=$((SUPERVISOR_ENABLE+1))
 fi
@@ -55,6 +55,7 @@ else
 			if [ $? -gt 0 ]; then
 				IPADDRS="$IPADDRS `cat /tmp/cloudflare-ips-v4 2> /dev/null`"
 			fi
+			sleep 3
 
 			IPADDRS="$IPADDRS `curl -f --connect-timeout 30 https://www.cloudflare.com/ips-v6 2> /dev/null`"
 			if [ $? -gt 0 ]; then
