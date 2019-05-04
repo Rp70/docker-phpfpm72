@@ -65,7 +65,7 @@ else
 			NGINX_REALIP_HEADER='CF-Connecting-IP'
 		else
 			# Try to get IP if it's a hostname
-			for $ipaddr2 in `getent hosts $ipaddr | awk '{print $1}'`; do
+			for ipaddr2 in `getent hosts $ipaddr | awk '{print $1}'`; do
 				IPADDRS="$IPADDRS $ipaddr2"
 			done
 		fi
