@@ -64,7 +64,10 @@ else
 
 			NGINX_REALIP_HEADER='CF-Connecting-IP'
 		else
-			IPADDRS="$IPADDRS $ipaddr"
+			# Try to get IP if it's a hostname
+			for $ipaddr2 in `getent hosts $ipaddr | awk '{print $1}'`; do
+				IPADDRS="$IPADDRS $ipaddr2"
+			done
 		fi
 	done
 
@@ -88,6 +91,10 @@ chmod 0777 /var/log/php-fpm
 if [ -e /entrypoint-hook-end.sh ]; then
 	. /entrypoint-hook-end.sh
 fi
+
+
+# Correct broken stuff caused by hooks, inherited docker images
+chmod a+rwxt /tmp
 
 if [ "$1" = 'startup' ]; then
 	if [ "$SUPERVISOR_ENABLE" -gt 0 ]; then
