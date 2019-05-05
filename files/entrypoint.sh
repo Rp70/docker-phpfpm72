@@ -55,7 +55,7 @@ else
 			if [ $? -gt 0 ]; then
 				IPADDRS="$IPADDRS `cat /tmp/cloudflare-ips-v4 2> /dev/null`"
 			fi
-			sleep 3
+			sleep 1
 
 			IPADDRS="$IPADDRS `curl -f --connect-timeout 30 https://www.cloudflare.com/ips-v6 2> /dev/null`"
 			if [ $? -gt 0 ]; then
