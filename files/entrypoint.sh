@@ -1,6 +1,13 @@
 #!/bin/sh
 set -e
 
+echo "Overwriting files (if any)"
+if [ -d /entrypoint/overwrite ]; then
+	cp -fvab /entrypoint/overwrite/* /
+fi
+echo
+
+
 if [ -e /entrypoint-hook-start.sh ]; then
 	. /entrypoint-hook-start.sh
 fi
@@ -12,6 +19,7 @@ NGINX_ENABLE=${NGINX_ENABLE:=''}
 NGINX_PROCESSES=${NGINX_PROCESSES:='2'}
 NGINX_REALIP_FROM=${NGINX_REALIP_FROM:=''}
 NGINX_REALIP_HEADER=${NGINX_REALIP_HEADER:='X-Forwarded-For'}
+
 
 SUPERVISOR_ENABLE=0
 
@@ -34,6 +42,23 @@ if [ "$NGINX_ENABLE" = '' ]; then
 	rm -f /etc/supervisor/conf.d/nginx.conf
 else
 	SUPERVISOR_ENABLE=$((SUPERVISOR_ENABLE+1))
+
+	NGINX_REPLACE=${NGINX_REPLACE:='NGINX_FASTCGI_PASS'}
+	NGINX_FASTCGI_PASS=${NGINX_FASTCGI_PASS:='127.0.0.1:9000'}
+	echo "Replacing variables in /etc/nginx"
+	SHELLFORMAT=''
+	for varname in $NGINX_REPLACE; do
+		SHELLFORMAT="\$$varname $SHELLFORMAT"
+	done
+	if [ "$SHELLFORMAT" != '' ]; then
+		SHELLFORMAT="'$SHELLFORMAT'"
+		for configfile in `find /etc/nginx -type f ! -path '*~'`; do
+			echo $configfile
+			content=`cat $configfile`
+			echo "$content" | envsubst "$SHELLFORMAT" > $configfile
+		done
+	fi
+	echo
 
 	#rm -rf /etc/nginx/sites-available/default
 	#sed -i 's/^user/daemon off;\nuser/g' /etc/nginx/nginx.conf
